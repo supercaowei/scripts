@@ -1,0 +1,52 @@
+#!/usr/bin/env python3
+
+import os, re
+
+def get_cmd_output(cmd):
+    fd = os.popen(cmd)
+    content = fd.read()
+    fd.close()
+    return content
+
+def parse_adb_devices(adb_devices_str):
+    ret = []
+    lines = adb_devices_str.split('\n')
+    for line in lines:
+        if line.startswith('List of devices'):
+            continue
+        regex = r'^(\S+).*'
+        matchObj = re.search(regex, line)
+        if matchObj:
+            ret.append(matchObj.group(1))
+        elif line:
+            print("can't parse device name from \"" + line + "\"")
+    return ret
+
+def alias(adb_devices):
+    home_path = os.environ.get('HOME')
+    bash_profile = open(home_path + '/.bash_profile')
+    bash_profile_content = bash_profile.read()
+    adb_index = 1
+    add_alias_cmd = ''
+    for device in adb_devices:
+        regex = r'alias adb\d="adb -s ' + device + r'"'
+        matchObj = re.search(regex, bash_profile_content)
+        if matchObj: #在bash_profile中找到了当前设备
+            print(matchObj.group(0))
+        else: #在bash_profile中没找到当前设备
+            while True:
+                if r'alias adb' + str(adb_index) in bash_profile_content:
+                    adb_index += 1
+                else:
+                    break
+            new_alias = r'alias adb' + str(adb_index) + r'=\"adb -s ' + device + r'\"'
+            adb_index += 1
+            add_alias_cmd = add_alias_cmd + (' && ' if add_alias_cmd else '') + new_alias
+    if add_alias_cmd:
+        os.system(r'echo "' + add_alias_cmd + r'" | pbcopy')
+        print("有其他设备可以设置简单名称，请直接在当前终端执行Ctrl+v粘贴alias命令")
+
+if __name__ == "__main__":
+    adb_devices_str = get_cmd_output('adb devices')
+    adb_devices = parse_adb_devices(adb_devices_str)
+    alias(adb_devices)

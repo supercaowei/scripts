@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+if [[ $1"x" = "x" ]]; then
+device=""
+else
+device="-s $1 "
+fi
+
+apks=""
+traverse() {
+    local dir="$1"
+    for f in `ls $1`; do
+        path="$dir/$f"
+        if [ -f ${path} ] && [[ ${path} =~ .*\.apk$ ]]; then
+            apks="${apks}${path} " #如果是apk文件就添加到apks
+        elif [ -d ${path} ]; then
+            traverse "${path}" #如果是目录就递归遍历
+        fi
+    done
+}
+traverse "app/build/outputs/apk" #将此目录中所有apk文件存入apks数组
+
+# echo "apks before sort: $apks"
+sorted_apks=(`ls -t $apks`) #将apks中所有文件按修改时间从新到老排序存入sorted_apks数组
+# echo "apks after sort: ${sorted_apks[@]}"
+echo "adb ${device}install -r ${sorted_apks[0]}"
+adb ${device}install -r "${sorted_apks[0]}"
