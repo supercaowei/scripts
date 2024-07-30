@@ -55,6 +55,9 @@ def parsePcmAudioParams(fileName):
         sys.exit("请在文件名中指明PCM的格式、采样率和通道数，形如\"格式_采样率_通道数\"。例如\"s16le_44100hz_1ch\"。")
     return ret
 
+def extIsYuv(ext):
+    return ext == '.yuv' or ext == '.nv12'
+
 if __name__ == "__main__":
     if len(sys.argv) != 2:
         sys.exit("请指定一个raw音视频文件路径")
@@ -68,7 +71,9 @@ if __name__ == "__main__":
     if ext == '.yuv' or ext == '.rgba' or ext == '.argb' or ext == '.nv12':
         ret = parseRawVideoParams(nameNoExt)
         pixFmt = {'.yuv': 'yuv420p', '.rgba': 'rgba', '.argb': 'argb', '.nv12': 'nv12'}
-        cmd = 'ffplay -f rawvideo -pixel_format ' + pixFmt[ext] + ' -video_size ' + ret[0] + 'x' + ret[1] + ' -framerate ' + ret[2] + ' -i \"' + rawFilePath + '\"'
+        videoFilter = ' -vf scale=in_range=limited:out_range=full' if extIsYuv(ext) else ''
+        cmd = 'ffplay -f rawvideo -pixel_format ' + pixFmt[ext] + ' -video_size ' + ret[0] + 'x' + ret[1] + ' -framerate ' + ret[2] \
+            + videoFilter + ' -i \"' + rawFilePath + '\"'
         print(cmd)
         os.system(cmd)
     elif ext == '.pcm':
