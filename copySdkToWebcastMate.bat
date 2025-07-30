@@ -26,11 +26,15 @@ exit /b
 :: MediaSdkOld
 set "sdk1=MediaSdkOld"
 set "source_dir1=C:\Users\Admin\Work\LiveMediaSDK\bins\exec64"
-set "file_names1=MediaSDK_Server.exe MediaSDK_Client.node PipeSDK_Server.node"
+set "file_names1=MediaSDK_Server.exe MediaSDK_Client.node PipeSDK_Server.node MediaSDK_CPlusplus.dll CudaFramework.dll RTFramework.dll PipeSDK.dll libltc.dll"
 ::MediaSdkNew
 set "sdk2=MediaSdkNew"
-set "source_dir2=C:\Users\Admin\Work\MediaSDK_CN\x64\bin"
-set "file_names2=AVFoundation.dll IPC.dll"
+set "source_dir2=C:\Users\Admin\Work\MediaSDK_CN_bak\x64\bin"
+set "file_names2=AJAToolkit.dll AVFoundation.dll Base.dll CudaToolkit.dll EffectToolkit.dll Graphics.dll GraphicsCapture.dll IPC.dll Media.dll MediaSDK.dll MediaSDK_Client2.node"
+set "file_names2=!file_names2! MediaSDK_Server2.exe Microsoft.DTfW.DHL.manifest NDIToolkit.dll Network.dll ParfaitMonitor.dll PipeSDK2.dll Plugins RTCToolkit.dll"
+set "file_names2=!file_names2! SamiToolkit.dll SpoutToolkit.dll VCam64.dll VideoDetect.dll vld_x64.dll Watchdog.dll"
+set "file_names2=!file_names2! QSV_Test.exe nv_test.exe AMF_Test.exe GPU_Detect.exe"
+
 ::LiveCore
 set "sdk3=LiveCore"
 set "source_dir3=C:\Users\Admin\Work\livecore\business_modules\LiveCore\build\output\Release\Windows\AMD64\x64\Release"
@@ -110,6 +114,12 @@ if not exist "%dest_dir%" (
     exit /b 1003
 )
 
+::拷贝到指定目录
+@REM set "dest_dir=C:\\Users\\Admin\\Work\\MediaSDK_Output"
+@REM if not exist "%dest_dir%" (
+@REM     mkdir "%dest_dir%\" >nul
+@REM )
+
 :: 文件复制流程
 echo 源目录：%source_dir%
 echo 目标目录：%dest_dir%
@@ -118,11 +128,18 @@ for %%f in (%file_names%) do (
     if not exist "%source_dir%\%%f" (
         echo 错误：源文件 %%f 不存在
         set "error_flag=1"
+    ) else if exist "%source_dir%\%%f\" (
+        echo 正在复制目录：%%f
+        xcopy /e /i /y "%source_dir%\%%f" "%dest_dir%\%%f\" >nul
+        if !errorlevel! neq 0 (
+            echo 错误：复制目录失败 - %%f
+            set "error_flag=1"
+        )
     ) else (
-        echo 正在复制：%%f
+        echo 正在复制文件：%%f
         xcopy /y "%source_dir%\%%f" "%dest_dir%\" >nul
         if !errorlevel! neq 0 (
-            echo 错误：复制失败 - %%f
+            echo 错误：复制文件失败 - %%f
             set "error_flag=1"
         )
     )
