@@ -29,10 +29,10 @@ set "source_dir1=C:\Users\Admin\Work\LiveMediaSDK\bins\exec64"
 set "file_names1=MediaSDK_Server.exe MediaSDK_Client.node PipeSDK_Server.node MediaSDK_CPlusplus.dll CudaFramework.dll RTFramework.dll PipeSDK.dll libltc.dll"
 ::MediaSdkNew
 set "sdk2=MediaSdkNew"
-set "source_dir2=C:\Users\Admin\Work\MediaSDK_CN_bak\x64\bin"
-set "file_names2=AJAToolkit.dll AVFoundation.dll Base.dll CudaToolkit.dll EffectToolkit.dll Graphics.dll GraphicsCapture.dll IPC.dll Media.dll MediaSDK.dll MediaSDK_Client2.node"
-set "file_names2=!file_names2! MediaSDK_Server2.exe Microsoft.DTfW.DHL.manifest NDIToolkit.dll Network.dll ParfaitMonitor.dll PipeSDK2.dll Plugins RTCToolkit.dll"
-set "file_names2=!file_names2! SamiToolkit.dll SpoutToolkit.dll VCam64.dll VideoDetect.dll vld_x64.dll Watchdog.dll"
+set "source_dir2=C:\Users\Admin\Work\MediaSDK_CN\x64\bin"
+set "file_names2=AJAToolkit.dll AVFoundation.dll Base.dll CudaToolkit.dll DeckLinkToolkit.dll EffectToolkit.dll Graphics.dll GraphicsCapture.dll IPC.dll Media.dll MediaSDK.dll"
+set "file_names2=!file_names2! MediaSDK_Client2.node MediaSDK_Server2.exe Microsoft.DTfW.DHL.manifest Mock.dll NDIToolkit.dll Network.dll ParfaitMonitor.dll PipeSDK2.dll Plugins"
+set "file_names2=!file_names2! RTCToolkit.dll SAMIToolkit.dll SpoutToolkit.dll SystemStatusDetect.dll VCam64.dll VideoDetect.dll vld_x64.dll Watchdog.dll"
 set "file_names2=!file_names2! QSV_Test.exe nv_test.exe AMF_Test.exe GPU_Detect.exe"
 
 ::LiveCore
