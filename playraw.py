@@ -56,7 +56,7 @@ def parsePcmAudioParams(fileName):
     return ret
 
 def extIsYuv(ext):
-    return ext == '.yuv' or ext == '.nv12'
+    return ext in ['.yuv', '.i420', '.nv12', '.nv21']
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
@@ -64,13 +64,14 @@ if __name__ == "__main__":
     rawFilePath = sys.argv[1]
     (dir1, name) = os.path.split(rawFilePath)
     (nameNoExt, ext) = os.path.splitext(name)
-    supportExt = ['.yuv', '.rgba', '.argb', '.nv12', '.pcm']
+    supportExt = ['.yuv', '.i420', '.nv12', '.nv21', '.rgba', '.argb', '.bgra', '.abgr', '.pcm']
     if ext not in supportExt:
         sys.exit("仅支持以下文件类型: " + str(supportExt))
     
-    if ext == '.yuv' or ext == '.rgba' or ext == '.argb' or ext == '.nv12':
+    if ext in ['.yuv', '.i420', '.nv12', '.nv21', '.rgba', '.argb', '.bgra', '.abgr']:
         ret = parseRawVideoParams(nameNoExt)
-        pixFmt = {'.yuv': 'yuv420p', '.rgba': 'rgba', '.argb': 'argb', '.nv12': 'nv12'}
+        pixFmt = {'.yuv': 'yuv420p', '.i420': 'yuv420p', '.nv12': 'nv12', '.nv21': 'nv21', 
+                  '.rgba': 'rgba', '.argb': 'argb', '.bgra': 'bgra', '.abgr': 'abgr'}
         videoFilter = ' -vf scale=in_range=limited:out_range=full' if extIsYuv(ext) else ''
         cmd = 'ffplay -f rawvideo -pixel_format ' + pixFmt[ext] + ' -video_size ' + ret[0] + 'x' + ret[1] + ' -framerate ' + ret[2] \
             + videoFilter + ' -i \"' + rawFilePath + '\"'

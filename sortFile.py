@@ -7,9 +7,11 @@ def sort_file(filename):
     with open(filename, 'r', encoding='utf-8') as f:
         lines = f.readlines()
     
-    # 按字符串升序排序（区分大小写）
-    lines.sort()
-    
+    # # 按字符串升序排序（区分大小写）
+    # lines.sort()
+    # 按字符串升序排序（不区分大小写）
+    lines.sort(key=str.lower)
+
     # 写回原文件
     with open(filename, 'w', encoding='utf-8') as f:
         f.writelines(lines)
